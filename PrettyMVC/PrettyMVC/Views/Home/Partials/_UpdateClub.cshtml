@@ -1,0 +1,38 @@
+﻿@model PrettyMVC.Models.ClubsViewModel
+
+@using (this.Html.BeginForm("UpdateClub", "Home", new { ClubId = Model.SelectedClub != null ? Model.SelectedClub.ClubId : 0 }, FormMethod.Post, new { @role = "form", @class = "form-horizontal", id = "clubDetail" }))
+{
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="ClubName" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Address</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="AddressLine1" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Town</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="Town" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Postcode</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="Postcode" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </div>
+}

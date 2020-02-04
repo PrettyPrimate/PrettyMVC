@@ -27,59 +27,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            @foreach (var club in Model.Clubs)
-                            {
+                        @foreach (var club in Model.Clubs)
+                        {
+                            <tr onclick="getClub(@club.ClubId)">
                                 <td>@club.ClubId</td>
                                 <td>@club.ClubName</td>
                                 <td>@club.AddressLine1</td>
                                 <td>@club.Town</td>
                                 <td>@club.Postcode</td>
-                            }
-                        </tr>
-                    </tbody>
+                            </tr>
+                        }
+                        </tbody>
                 </table>
             </div>
             <div class="col-md-4">
-                @if (Model.SelectedClub != null)
-                {
-                    using (this.Html.BeginForm("UpdateClub", "Home", new { ClubId = this.Model.SelectedClub.ClubId }, FormMethod.Post, new { @role = "form", @class = "form-horizontal" }))
-                    {
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="ClubName" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Address</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="AddressLine1" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Town</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="Town" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Postcode</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="Postcode" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <input type="submit" value="Save" class="btn btn-primary" />
-                            </div>
-                        </div>
-                    }
-                }
+                
+                  @Html.Partial("Partials/_UpdateClub", Model)
 
             </div>
 
@@ -133,7 +96,7 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4">
-                @if (Model.SelectedClub != null)
+                @if (Model.SelectedClub != null && Model.ClubMembers.Count > 0)
                 {
                     <table class="table table-striped table-hover table-bordered">
                         <thead>
@@ -235,6 +198,22 @@
 {
 
     <script>
+
+
+        function getClub(clubId) {
+
+            $.ajax({
+                url: '@Url.Action("GetClubDetails", "Home")',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                data: { clubId: clubId },
+                success: function(response) {
+                    //alert(response);
+                    $('#clubDetail').html(response);
+                },
+                error: function(response){ alert(response)}
+            });
+        }
 
         function addClub() {
 

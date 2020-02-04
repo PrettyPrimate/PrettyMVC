@@ -12,19 +12,28 @@ namespace PrettyMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private const string url = "http://prettyapi/api/clubs/GetAllClubs";
-        private string urlParameters = "?api_key=123";
+        //private const string url = "http://prettyapi/api/clubs/GetAllClubs";
+        //private string urlParameters = "?api_key=123";
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? selectedClubId, int? selectedClubMemberId)
         {
+            var model = new ClubsViewModel();
+
             var clubs = await GetClubs();
 
+            if (selectedClubId.HasValue)
+            {
+                var club = await GetClubDetails(selectedClubId.Value);
 
-            var model = new ClubsViewModel(){ Clubs =  clubs };
+                model.SelectedClub = club;
+            }
+
+            model.Clubs = clubs;
 
             return View(model);
         }
 
+        [HttpGet]
         public async Task<List<Club>> GetClubs()
         {
             var clubs = new List<Club>();
@@ -33,18 +42,11 @@ namespace PrettyMVC.Controllers
             {
                 var fullReqUrl = "http://prettyapi/api/clubs/GetAllClubs";
 
-                try
-                {
-                    var response = await client.GetAsync(fullReqUrl);
+                var response = await client.GetAsync(fullReqUrl);
 
-                    var stringContent = await response.Content.ReadAsStringAsync();
+                var stringContent = await response.Content.ReadAsStringAsync();
 
-                    clubs = DeserialiseContent<List<Club>>(stringContent);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Response from the request did not indicate success");
-                }
+                clubs = DeserialiseContent<List<Club>>(stringContent);
             }
 
             return clubs;
@@ -60,9 +62,25 @@ namespace PrettyMVC.Controllers
             return null;
         }
 
-        public Task<JsonResult> AddClub()
+        public async Task<ActionResult> AddClub(string clubName, string addressLine1, string town, string postcode)
         {
-            return null;
+            //var club = new Club();
+
+            //using (var client = GetHttpClient())
+            //{
+            //    var fullReqUrl = "http://prettyapi/api/clubs/GetAllClubs";
+
+            //    var response = await client.GetAsync(fullReqUrl);
+
+            //    var stringContent = await response.Content.ReadAsStringAsync();
+
+            //    club = DeserialiseContent<Club>(stringContent);
+            //}
+
+
+
+
+            return RedirectToAction("Index", new { selectedClubId = 1 });
         }
 
         public Task<JsonResult> UpdateClub(Club club)
@@ -80,29 +98,33 @@ namespace PrettyMVC.Controllers
             return null;
         }
 
-        public async Task<List<Club>> GetClubDetails(int clubId)
+        [HttpGet]
+        public async Task<Club> GetClubDetails(int clubId)
         {
-            var clubs = new List<Club>();
+            var club = new Club();
 
             using (var client = GetHttpClient())
             {
-                var fullReqUrl = "http://prettyapi/api/clubs/GetAllClubs";
+                var fullReqUrl = $"http://prettyapi/api/clubs/GetClub?clubid={clubId}";
 
-                try
-                {
-                    var response = await client.GetAsync(fullReqUrl);
+                var response = await client.GetAsync(fullReqUrl);
 
-                    var stringContent = await response.Content.ReadAsStringAsync();
+                var stringContent = await response.Content.ReadAsStringAsync();
 
-                    clubs = DeserialiseContent<List<Club>>(stringContent);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Response from the request did not indicate success");
-                }
+                club = DeserialiseContent<Club>(stringContent);
             }
 
-            return clubs;
+            //return Json(club, JsonRequestBehavior.AllowGet);
+            return club;
+        }
+
+        public async Task<PartialViewResult> GetClubView(int clubId)
+        {
+            var club = await GetClubDetails(clubId);
+
+            var model = new ClubsViewModel() { SelectedClub = club};
+
+            return PartialView("_UpdateClub", model);
         }
 
         //[HttpPost]
