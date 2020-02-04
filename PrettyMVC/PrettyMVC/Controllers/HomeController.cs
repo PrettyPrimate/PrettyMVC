@@ -134,6 +134,21 @@ namespace PrettyMVC.Controllers
         //}
 
 
+        //[HttpPost]
+        //public async Task<JsonResult> DetachOrders(List<int> id)
+        //{
+        //    foreach (var item in id)
+        //    {
+        //        var result = await this.ExecuteCommandWithResult(new RemoveOrderNumberFromStockItem { StockReference = item });
+        //        if (!result.Success)
+        //        {
+        //            return Json(result);
+        //        }
+        //    }
+
+        //    return Json(new Result { Success = true, SuccessReference = string.Format("{0}  Stock References Corrected", id.Count) });
+        //}
+
         private HttpClient GetHttpClient()
         {
             var handler = new HttpClientHandler();

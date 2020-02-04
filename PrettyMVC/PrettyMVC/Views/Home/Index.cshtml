@@ -199,6 +199,13 @@
 
     <script>
 
+        $(function() {
+
+            $('#frmSelectFromScann').on('submit',
+                function(e) {
+                    e.preventDefault();
+                });
+        });
 
         function getClub(clubId) {
 
@@ -211,7 +218,7 @@
                     //alert(response);
                     $('#clubDetail').html(response);
                 },
-                error: function(response){ alert(response)}
+                error: function(response) { alert(response) }
             });
         }
 
@@ -226,7 +233,7 @@
                 type: "POST",
                 url: '@(Url.Action("AddClub", "Home"))',
                 data: formData,
-                success: function (data) {
+                success: function(data) {
                     if (data.Success == true) {
                         alert("Club added");
                     } else {
@@ -234,13 +241,29 @@
                         alert("Failed to add club");
                     }
                 },
-                error: function (data) {
+                error: function(data) {
                     console.log(data);
                     console.log(formData);
                     alert("Failed to add club");
                 }
             });
         }
+
+
+        //function detachOrders(selectedItems) {
+        //    var queryString = getQueryStringFromSelected(selectedItems);
+
+        //    var url = "/StockControl/StockWithDataErrors/DetachOrders";
+
+        //    $.post(url, queryString).done(function (retVal) {
+        //        if (retVal.Success) {
+        //            toastr.success("{0},  please refresh your results.".format(retVal.SuccessReference));
+        //            return;
+        //        }
+
+        //        toastr.error("An error occured, {0}, please try again".format(retVal.FailMessage));
+        //    });
+        //}
 
     </script>
 }
